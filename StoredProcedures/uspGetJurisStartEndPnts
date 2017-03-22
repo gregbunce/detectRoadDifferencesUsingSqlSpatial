@@ -1,0 +1,32 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspGetJurisStartEndPnts]    Script Date: 3/22/2017 4:54:13 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		gbunce
+-- Create date: 3/22/2017
+-- Description:	this sp gets the start and end points of the juris' road segment based on oid
+-- =============================================
+CREATE PROCEDURE [username].[uspGetJurisStartEndPnts] 
+	-- Add the parameters for the stored procedure here
+	@OID int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DECLARE @gg geometry = (SELECT SHAPE from MOAB_CITY_SUB where OBJECTID_12 = @OID);
+	SELECT @gg.STStartPoint().ToString() as myStartPoint, @gg.STEndPoint().ToString() as myEndPoint;
+END
+
+GO
+
+

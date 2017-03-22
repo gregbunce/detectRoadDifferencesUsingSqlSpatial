@@ -1,0 +1,35 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspBufferFeatureSelectUtransWithin]    Script Date: 3/22/2017 4:47:05 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		gbunce
+-- Create date: 3/10/2017
+-- Description:	User passes in an objectid and buffer dist and this query buffers the segment and selects all utrans segments within the buffer
+-- =============================================
+CREATE PROCEDURE [username].[uspBufferFeatureSelectUtransWithin] 
+	-- parameters for the stored procedure
+	@pBuffDist int = 0, 
+	@pOID int = 0
+	--@rowcount int OUTPUT
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- select statements
+	DECLARE @g geometry = (select Shape.STBuffer(@pBuffDist) as buffer from MOAB_CITY_SUB where OBJECTID_12 = @pOID);
+	SELECT * FROM UTRANS_STREETS where Shape.STWithin(@g) = 1;
+	--SET @rowcount = convert(int,(@@ROWCOUNT))
+	--select @rowcount;
+END
+
+
+GO

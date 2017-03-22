@@ -1,0 +1,36 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspGetDistBtwTwoPoints]    Script Date: 3/22/2017 4:50:34 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		gbunce
+-- Create date: 3/13/2017
+-- Description:	returns the distance between two points
+-- =============================================
+CREATE PROCEDURE [username].[uspGetDistBtwTwoPoints] 
+	-- Add the parameters for the stored procedure here
+	@pnt1 varchar(1000), 
+	@pnt2 varchar(1000)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	-- select the distance between the source and base road segment centroids
+	DECLARE @g1 geometry;  
+	DECLARE @g2 geometry;  
+	SET @g1 = geometry::STGeomFromText(@pnt1, 26912);
+	SET @g2 = geometry::STGeomFromText(@pnt2, 26912);
+	select @g1.STDistance(@g2) as DistBetweenPoints;
+END
+
+GO
+
+
