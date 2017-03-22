@@ -1,0 +1,35 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspGetUtransCentroid]    Script Date: 3/22/2017 5:07:25 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		gbunce
+-- Create date: 3/13/2017
+-- Description:	buffer the road segment and get the centroid (buffer is required b/c centroid is of polygon)
+-- =============================================
+CREATE PROCEDURE [username].[uspGetUtransCentroid] 
+	-- Add the parameters for the stored procedure here
+	@pBuff int = 0, 
+	@pOID int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DECLARE @gg geometry = (SELECT SHAPE.STBuffer(@pBuff) as buffer from UTRANS_STREETS where OBJECTID = @pOID);
+	DECLARE @CentroidUtrans geometry = (SELECT @gg.STCentroid().ToString() as myCentroid);
+	-- select @CentroidUtrans; --this just returns the shape (WKBGeometry)
+	SELECT @CentroidUtrans.ToString(); -- this returns the (WKT)
+END
+
+GO
+
+
