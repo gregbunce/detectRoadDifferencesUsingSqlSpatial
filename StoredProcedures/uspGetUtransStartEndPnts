@@ -1,0 +1,30 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspGetUtransStartEndPnts]    Script Date: 3/22/2017 5:08:54 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		gbunce
+-- Create date: 3/22/2017
+-- Description:	this sp gets the start and end point of the utrans road segment based on oid
+-- =============================================
+CREATE PROCEDURE [username].[uspGetUtransStartEndPnts] 
+	-- Add the parameters for the stored procedure here
+	@OID int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DECLARE @gg geometry = (SELECT SHAPE from UTRANS_STREETS where OBJECTID = @OID);
+	SELECT @gg.STStartPoint().ToString() as myStartPoint, @gg.STEndPoint().ToString() as myEndPoint;
+END
+
+GO
