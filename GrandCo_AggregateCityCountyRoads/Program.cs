@@ -36,7 +36,6 @@ namespace GrandCo_AggregateCityCountyRoads
             {
                 //string strMonthDay = string.Concat(DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Year);
                 //setup a file stream and a stream writer to write out the addresses that do not have a nearby street or a street out of range
-                //string path = "\\\\GRHNAS01SP.STATE.UT.US\\AGRC Projects\\AddressPoints_Editing\\Data\\ChangesToProcess\\AddressChangesPiute" + strMonthDay + ".txt";
                 string path = @"C:\temp\MoabCity" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm") +".txt";
                 FileStream fileStream = new FileStream(path, FileMode.Create);
                 StreamWriter streamWriter = new StreamWriter(fileStream);
@@ -44,7 +43,7 @@ namespace GrandCo_AggregateCityCountyRoads
                 int intUniqueID = 0;
 
                 //SqlConnection connection = new SqlConnection(AddressPoints_DetectChanges.Properties.Settings.Default.ConnectionString);
-                string connectionString = @"Persist Security Info=False;Integrated Security=true;Initial Catalog=GregTest;server=itdb112sp.dts.utah.gov\mspd14";
+                string connectionString = @"hidden";
 
                 //////////// GET A RECORD SET OF THE JURIS' SEGMENTS TO LOOP THROUGH ////////////////////////////////////////////// 
                 using (SqlConnection con1 = new SqlConnection(connectionString))
