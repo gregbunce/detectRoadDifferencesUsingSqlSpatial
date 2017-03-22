@@ -1,0 +1,34 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspGetNearestAddressPointFromPoint]    Script Date: 3/22/2017 4:55:58 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		GregBunce
+-- Create date: 3/2/2017
+-- Description:	Returns nearest address point from given
+-- =============================================
+CREATE PROCEDURE [username].[uspGetNearestAddressPointFromPoint]
+	-- Add the parameters for the stored procedure here
+	@InputLayerOID int
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DECLARE @g geometry = (select Shape from ADDRPNTS_FROMCOUNTY where OBJECTID = @InputLayerOID);
+	SELECT TOP(1) Shape.STDistance(@g) as DISTANCE, Shape.STY as Y, Shape.STX as X, *  FROM ADDRPNTS_TOSGID
+	WHERE Shape.STDistance(@g) is not null
+	ORDER BY Shape.STDistance(@g);
+END
+
+GO
+
+
