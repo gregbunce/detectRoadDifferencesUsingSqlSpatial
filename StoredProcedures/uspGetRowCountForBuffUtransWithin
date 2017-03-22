@@ -1,0 +1,33 @@
+USE [DatabaseName]
+GO
+
+/****** Object:  StoredProcedure [username].[uspGetRowCountForBuffUtransWithin]    Script Date: 3/22/2017 5:05:57 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		gbunce
+-- Create date: 03/10/2017
+-- Description:	get row count for the uspBufferFeatureSelectUtransWithin SP
+-- =============================================
+CREATE PROCEDURE [username].[uspGetRowCountForBuffUtransWithin] 
+	-- Add the parameters for the stored procedure here
+	@pBuffDist int = 0, 
+	@pOID int = 0
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+    -- Insert statements for procedure here
+	DECLARE @g geometry = (select Shape.STBuffer(@pBuffDist) as buffer from MOAB_CITY_SUB where OBJECTID_12 = @pOID);
+	SELECT count(*) count from (SELECT * from UTRANS_STREETS where Shape.STWithin(@g) = 1) as count;
+END
+
+GO
+
+
