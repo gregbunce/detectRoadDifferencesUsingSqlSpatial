@@ -36,7 +36,6 @@ namespace GrandCo_AggregateCityCountyRoads
             {
                 //string strMonthDay = string.Concat(DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Year);
                 //setup a file stream and a stream writer to write out the addresses that do not have a nearby street or a street out of range
-                //string path = "\\\\GRHNAS01SP.STATE.UT.US\\AGRC Projects\\AddressPoints_Editing\\Data\\ChangesToProcess\\AddressChangesPiute" + strMonthDay + ".txt";
                 string path = @"C:\temp\MoabCity" + DateTime.Now.ToString("yyyy-MM-dd-HH-mm") +".txt";
                 FileStream fileStream = new FileStream(path, FileMode.Create);
                 StreamWriter streamWriter = new StreamWriter(fileStream);
