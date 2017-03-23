@@ -55,7 +55,7 @@ namespace GrandCo_AggregateCityCountyRoads
 
                     // The following code uses an SqlCommand based on the SqlConnection.
                     //using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB;", con1))
-                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB where OBJECTID_12 < 200", con1))
+                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB", con1))
 
                     using (SqlDataReader readerJurisSegment = command1.ExecuteReader())
                     {
@@ -281,12 +281,26 @@ namespace GrandCo_AggregateCityCountyRoads
                                                                 // set attribute variables for this utrans segments - in case it's the winner of the closest dist competition
                                                                 strMatchOID = readerUtransWithinBuffer["OBJECTID"].ToString();
                                                                 blnMatchedOID = true;
-                                                                strJurisFullName = readerJurisSegment["ROAD_NAME"].ToString().ToUpper();
-                                                                strMatchFullName = readerUtransWithinBuffer["STREETNAME"].ToString().ToUpper();
-                                                                lngMatch_L_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_F_ADD"]);
-                                                                lngMatch_L_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_T_ADD"]);
-                                                                lngMatch_R_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_F_ADD"]);
-                                                                lngMatch_R_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_T_ADD"]);
+                                                                if (!readerJurisSegment.IsDBNull(readerJurisSegment.GetOrdinal("ROAD_NAME")))
+                                                                {
+                                                                    strJurisFullName = readerJurisSegment["ROAD_NAME"].ToString().ToUpper();
+                                                                }
+                                                                else
+                                                                {
+                                                                    strJurisFullName = "null";
+                                                                }
+                                                                if (!readerUtransWithinBuffer.IsDBNull(readerUtransWithinBuffer.GetOrdinal("STREETNAME")))
+                                                                {
+                                                                    strMatchFullName = readerUtransWithinBuffer["STREETNAME"].ToString().ToUpper();
+                                                                }
+                                                                else
+                                                                {
+                                                                    strMatchFullName = "null";
+                                                                }
+                                                                //lngMatch_L_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_F_ADD"]);
+                                                                //lngMatch_L_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_T_ADD"]);
+                                                                //lngMatch_R_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_F_ADD"]);
+                                                                //lngMatch_R_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_T_ADD"]);
 
                                                                 intUniqueID = intUniqueID + 1;
                                                                 streamWriter.WriteLine(intUniqueID + "," + "-1," + strMatchOID + "," + readerJurisSegment["OBJECTID_12"].ToString() + "," + "ATTRIBUTE," + "Segmant found but different attributes," + strMatchFullName + "," + strJurisFullName);
@@ -428,12 +442,27 @@ namespace GrandCo_AggregateCityCountyRoads
                                                                                                         // set attribute variables for this utrans segments - in case it's the winner of the closest dist competition
                                                                                                         strMatchOID = readerUtransWithinBuffer["OBJECTID"].ToString();
                                                                                                         blnMatchedOID = true;
-                                                                                                        strJurisFullName = readerJurisSegment["ROAD_NAME"].ToString().ToUpper();
-                                                                                                        strMatchFullName = readerUtransWithinBuffer["STREETNAME"].ToString().ToUpper();
-                                                                                                        lngMatch_L_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_F_ADD"]);
-                                                                                                        lngMatch_L_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_T_ADD"]);
-                                                                                                        lngMatch_R_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_F_ADD"]);
-                                                                                                        lngMatch_R_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_T_ADD"]);
+                                                                                                        if (!readerJurisSegment.IsDBNull(readerJurisSegment.GetOrdinal("ROAD_NAME")))
+                                                                                                        {
+                                                                                                            strJurisFullName = readerJurisSegment["ROAD_NAME"].ToString().ToUpper();
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            strJurisFullName = "null";
+                                                                                                        }
+                                                                                                        if (!readerUtransWithinBuffer.IsDBNull(readerUtransWithinBuffer.GetOrdinal("STREETNAME")))
+                                                                                                        {
+                                                                                                            strMatchFullName = readerUtransWithinBuffer["STREETNAME"].ToString().ToUpper();
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            strMatchFullName = "null";
+                                                                                                        }
+                                                                                                        
+                                                                                                        //lngMatch_L_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_F_ADD"]);
+                                                                                                        //lngMatch_L_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["L_T_ADD"]);
+                                                                                                        //lngMatch_R_F_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_F_ADD"]);
+                                                                                                        //lngMatch_R_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_T_ADD"]);
                                                                                                         intMatchCentroidDist = Convert.ToInt32(readerGetDistBtwnPnts.GetValue(0));
                                                                                                     }
 	                                                                                            }
@@ -507,7 +536,7 @@ namespace GrandCo_AggregateCityCountyRoads
             }
             catch (Exception ex)
             {
-                Console.WriteLine("There was an error with the GrandCo_AggregateCityCountyRoads console application." + ex.Message);
+                Console.WriteLine("There was an error in the Main method within the GrandCo_AggregateCityCountyRoads console application." + ex.Message);
                 Console.ReadLine();
             }
             finally
@@ -537,7 +566,7 @@ namespace GrandCo_AggregateCityCountyRoads
             }
             catch (Exception ex)
             {
-                Console.WriteLine("There was an error with the getLineDirection method in the GrandCo_AggregateCityCountyRoads console application." + ex.Message);
+                Console.WriteLine("There was an error with the getLineDirection method in the GrandCo_AggregateCityCountyRoads console application." + ex.Message + " " + ex.Source + " " + ex.InnerException + " " + ex.HResult + " " + ex.StackTrace + " " + ex);
                 Console.ReadLine();
                 return -1;
             }
