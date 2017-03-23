@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Data;
 using System.Data.SqlClient;
+using System.Configuration;
 
 namespace GrandCo_AggregateCityCountyRoads
 {
@@ -42,8 +43,8 @@ namespace GrandCo_AggregateCityCountyRoads
                 streamWriter.WriteLine("UniqueID" + "," + "CentroidDist" + "," + "MatchOID" + "," + "JurisOID" + "," + "ChangeType" + "," + "Notes" + "," + "UtransFullname" + "," + "JurisFullname");
                 int intUniqueID = 0;
 
-                //SqlConnection connection = new SqlConnection(AddressPoints_DetectChanges.Properties.Settings.Default.ConnectionString);
-                string connectionString = @"Persist Security Info=False;Integrated Security=true;Initial Catalog=GregTest;server=itdb112sp.dts.utah.gov\mspd14";
+                //SqlConnection connection = new SqlConnection(GrandCo_AggregateCityCountyRoads.Properties.Settings.Default.ConnectionString);
+                var connectionString = ConfigurationManager.AppSettings["myConn"];
 
                 //////////// GET A RECORD SET OF THE JURIS' SEGMENTS TO LOOP THROUGH ////////////////////////////////////////////// 
                 using (SqlConnection con1 = new SqlConnection(connectionString))
@@ -53,7 +54,7 @@ namespace GrandCo_AggregateCityCountyRoads
 
                     // The following code uses an SqlCommand based on the SqlConnection.
                     //using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB;", con1))
-                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB where OBJECTID_12 < 200", con1))
+                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB where OBJECTID_12 < 100", con1))
 
                     using (SqlDataReader readerJurisSegment = command1.ExecuteReader())
                     {
@@ -176,7 +177,7 @@ namespace GrandCo_AggregateCityCountyRoads
                                                                     commandGetJurisStartEndPnts.CommandType = CommandType.StoredProcedure;
 
                                                                     // add parameter to sql command, which will be passed to the stored procedure
-                                                                    commandGetJurisStartEndPnts.Parameters.Add(new SqlParameter("@pOID", Convert.ToInt32(readerJurisSegment["OBJECTID_12"])));
+                                                                    commandGetJurisStartEndPnts.Parameters.Add(new SqlParameter("@OID", Convert.ToInt32(readerJurisSegment["OBJECTID_12"])));
 
                                                                     // execute the sql command
                                                                     using (SqlDataReader readerGetJurisStartEndPnts = commandGetJurisStartEndPnts.ExecuteReader())
@@ -214,7 +215,7 @@ namespace GrandCo_AggregateCityCountyRoads
                                                                     commandGetUtransStartEndPnts.CommandType = CommandType.StoredProcedure;
 
                                                                     // add parameter to sql command, which will be passed to the stored procedure
-                                                                    commandGetUtransStartEndPnts.Parameters.Add(new SqlParameter("@pOID", Convert.ToInt32(readerUtransWithinBuffer["OBJECTID"])));
+                                                                    commandGetUtransStartEndPnts.Parameters.Add(new SqlParameter("@OID", Convert.ToInt32(readerUtransWithinBuffer["OBJECTID"])));
 
                                                                     // execute the sql command
                                                                     using (SqlDataReader readerGetUtransStartEndPnts = commandGetUtransStartEndPnts.ExecuteReader())
@@ -259,7 +260,10 @@ namespace GrandCo_AggregateCityCountyRoads
                                                             // check if the line directions are simlar (within a certain angle degrees - maybe 45?)
                                                             // check if the matched utrans segment's angle is within 45 degrees in each direction
                                                             // strait north bearing street is 360 degrees, south bearing segment is 180
-                                                            if (dblLineDirectionUtrans > (dblLineDirectionJuris + 90) & (dblLineDirectionJuris - 90) < dblLineDirectionUtrans)
+                                                            double dblJurisLineAngleLowEnd = dblLineDirectionJuris - 90;
+                                                            double dblJurisLineAngleHighEnd = dblLineDirectionJuris + 90;
+
+                                                            if (dblLineDirectionUtrans > dblJurisLineAngleLowEnd & dblLineDirectionUtrans < dblJurisLineAngleHighEnd)
                                                             {
                                                                 // if this is true then assign the dist variable this new value - for comparison next loop through
                                                                 // set attribute variables for this utrans segments - in case it's the winner of the closest dist competition
@@ -490,7 +494,7 @@ namespace GrandCo_AggregateCityCountyRoads
             }
             catch (Exception ex)
             {
-                Console.WriteLine("There was an error with the AddressPoints_DetectChanges console application." + ex.Message);
+                Console.WriteLine("There was an error with the GrandCo_AggregateCityCountyRoads console application." + ex.Message);
                 Console.ReadLine();
             }
             finally
