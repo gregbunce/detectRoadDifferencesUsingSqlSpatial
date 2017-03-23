@@ -45,6 +45,7 @@ namespace GrandCo_AggregateCityCountyRoads
 
                 //SqlConnection connection = new SqlConnection(GrandCo_AggregateCityCountyRoads.Properties.Settings.Default.ConnectionString);
                 var connectionString = ConfigurationManager.AppSettings["myConn"];
+                //test
 
                 //////////// GET A RECORD SET OF THE JURIS' SEGMENTS TO LOOP THROUGH ////////////////////////////////////////////// 
                 using (SqlConnection con1 = new SqlConnection(connectionString))
