@@ -55,7 +55,7 @@ namespace GrandCo_AggregateCityCountyRoads
 
                     // The following code uses an SqlCommand based on the SqlConnection.
                     //using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB;", con1))
-                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB where OBJECTID_12 < 100", con1))
+                    using (SqlCommand command1 = new SqlCommand("SELECT * FROM MOAB_CITY_SUB where OBJECTID_12 < 200", con1))
 
                     using (SqlDataReader readerJurisSegment = command1.ExecuteReader())
                     {
@@ -274,6 +274,7 @@ namespace GrandCo_AggregateCityCountyRoads
                                                             }
 
 
+                                                            // check if line angle is within specified tolerance
                                                             if (dblLineDirectionUtrans > dblJurisLineAngleLowEnd & dblLineDirectionUtrans < dblJurisLineAngleHighEnd)
                                                             {
                                                                 // if this is true then assign the dist variable this new value - for comparison next loop through
