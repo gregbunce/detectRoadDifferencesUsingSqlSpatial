@@ -210,7 +210,7 @@ namespace GrandCo_AggregateCityCountyRoads
                                                                 conGetUtransStartEndPnt.Open();
 
                                                                 // create a sql command
-                                                                using (SqlCommand commandGetUtransStartEndPnts = new SqlCommand("uspGetJurisStartEndPnts", conGetUtransStartEndPnt))
+                                                                using (SqlCommand commandGetUtransStartEndPnts = new SqlCommand("uspGetUtransStartEndPnts", conGetUtransStartEndPnt))
                                                                 {
                                                                     // set the command object so it knows to execute a stored procedure
                                                                     commandGetUtransStartEndPnts.CommandType = CommandType.StoredProcedure;
@@ -249,8 +249,8 @@ namespace GrandCo_AggregateCityCountyRoads
 
                                                             double dblUtransStartX = getX_fromPnt(strUtransStartPnt);
                                                             double dblUtransEndX = getX_fromPnt(strUtransEndPnt);
-                                                            double dblUtransStartY = getX_fromPnt(strUtransStartPnt);
-                                                            double dblUtransEndY = getX_fromPnt(strUtransEndPnt);
+                                                            double dblUtransStartY = getY_fromPnt(strUtransStartPnt);
+                                                            double dblUtransEndY = getY_fromPnt(strUtransEndPnt);
 
 
                                                             // call the line direction method to see if line segment is of similar angle
@@ -261,8 +261,18 @@ namespace GrandCo_AggregateCityCountyRoads
                                                             // check if the line directions are simlar (within a certain angle degrees - maybe 45?)
                                                             // check if the matched utrans segment's angle is within 45 degrees in each direction
                                                             // strait north bearing street is 360 degrees, south bearing segment is 180
-                                                            double dblJurisLineAngleLowEnd = dblLineDirectionJuris - 90;
-                                                            double dblJurisLineAngleHighEnd = dblLineDirectionJuris + 90;
+                                                            double dblJurisLineAngleLowEnd = dblLineDirectionJuris - 45;
+                                                            double dblJurisLineAngleHighEnd = dblLineDirectionJuris + 45;
+                                                            // check if number is greater than 360 or less than 360 - and readjust numbers to conform to circle
+                                                            if (dblJurisLineAngleHighEnd > 360)
+                                                            {
+                                                                dblJurisLineAngleHighEnd = dblJurisLineAngleHighEnd - 360;
+                                                            }
+                                                            if (dblJurisLineAngleLowEnd < 0)
+                                                            {
+                                                                dblJurisLineAngleLowEnd = dblJurisLineAngleLowEnd + 360;
+                                                            }
+
 
                                                             if (dblLineDirectionUtrans > dblJurisLineAngleLowEnd & dblLineDirectionUtrans < dblJurisLineAngleHighEnd)
                                                             {
@@ -283,7 +293,8 @@ namespace GrandCo_AggregateCityCountyRoads
                                                             }
                                                             else // if it's out of the range then let's say it's a differnt road segment (with different street name) all together
                                                             {
-
+                                                                // do nothing...
+                                                                break;
                                                             }
                                                         }
 
@@ -538,10 +549,12 @@ namespace GrandCo_AggregateCityCountyRoads
         {
             try
             {
-                strPntWKT = strPntWKT.Replace("(", String.Empty);
-                strPntWKT = strPntWKT.Replace(")", String.Empty);
+                string strPntWKT_ = strPntWKT;
 
-                string[] strParsed = strPntWKT.Split(' ');
+                strPntWKT_ = strPntWKT_.Replace("(", String.Empty);
+                strPntWKT_ = strPntWKT_.Replace(")", String.Empty);
+
+                string[] strParsed = strPntWKT_.Split(' ');
 
                 string strGetX = strParsed[1].Trim();
                 //string strGetY = strParsed[2].Trim();
@@ -566,10 +579,12 @@ namespace GrandCo_AggregateCityCountyRoads
         {
             try
             {
-                strPntWKT = strPntWKT.Replace("(", String.Empty);
-                strPntWKT = strPntWKT.Replace(")", String.Empty);
+                string strPntWKT_ = strPntWKT;
 
-                string[] strParsed = strPntWKT.Split(' ');
+                strPntWKT_ = strPntWKT_.Replace("(", String.Empty);
+                strPntWKT_ = strPntWKT_.Replace(")", String.Empty);
+
+                string[] strParsed = strPntWKT_.Split(' ');
 
                 //string strGetX = strParsed[1].Trim();
                 string strGetY = strParsed[2].Trim();
