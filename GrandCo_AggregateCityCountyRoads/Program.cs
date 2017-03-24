@@ -261,8 +261,8 @@ namespace GrandCo_AggregateCityCountyRoads
                                                             // check if the line directions are simlar (within a certain angle degrees - maybe 45?)
                                                             // check if the matched utrans segment's angle is within 45 degrees in each direction
                                                             // strait north bearing street is 360 degrees, south bearing segment is 180
-                                                            double dblJurisLineAngleLowEnd = dblLineDirectionJuris - 45;
-                                                            double dblJurisLineAngleHighEnd = dblLineDirectionJuris + 45;
+                                                            double dblJurisLineAngleLowEnd = dblLineDirectionJuris - 80;
+                                                            double dblJurisLineAngleHighEnd = dblLineDirectionJuris + 80;
                                                             // check if number is greater than 360 or less than 360 - and readjust numbers to conform to circle
                                                             if (dblJurisLineAngleHighEnd > 360)
                                                             {
@@ -303,12 +303,14 @@ namespace GrandCo_AggregateCityCountyRoads
                                                                 //lngMatch_R_T_ADD = Convert.ToInt64(readerUtransWithinBuffer["R_T_ADD"]);
 
                                                                 intUniqueID = intUniqueID + 1;
-                                                                streamWriter.WriteLine(intUniqueID + "," + "-1," + strMatchOID + "," + readerJurisSegment["OBJECTID_12"].ToString() + "," + "ATTRIBUTE," + "Segmant found but different attributes," + strMatchFullName + "," + strJurisFullName);
+                                                                streamWriter.WriteLine(intUniqueID + "," + "-1," + strMatchOID + "," + readerJurisSegment["OBJECTID_12"].ToString() + "," + "ATTRIBUTE," + "One Segmant found but diff name in angle range," + strMatchFullName + "," + strJurisFullName);
                                                                 break;                                                          
                                                             }
                                                             else // if it's out of the range then let's say it's a differnt road segment (with different street name) all together
                                                             {
-                                                                // do nothing...
+                                                                // maybe it's a new segment - so check how far the closest segment is away, if it's far then this segment is probably new
+                                                                intUniqueID = intUniqueID + 1;
+                                                                streamWriter.WriteLine(intUniqueID + "," + "-1," + strMatchOID + "," + readerJurisSegment["OBJECTID_12"].ToString() + "," + "MAYBE_NEW," + "One Segmant found diff name out of angle range," + strMatchFullName + "," + strJurisFullName);
                                                                 break;
                                                             }
                                                         }
